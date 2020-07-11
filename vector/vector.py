@@ -1,6 +1,7 @@
 from array import array
 import reprlib
 import math
+import numbers
 
 
 class Vector:
@@ -39,3 +40,16 @@ class Vector:
         typecode = chr(octets[0])
         memv = memoryview(octets[1:]).cast(typecode)
         return cls(memv)
+
+    def __len__(self):
+        return len(self._components)
+
+    def __getitem__(self, index):
+        cls = type(self)
+        if isinstance(index, slice):
+            return cls(self._components[index])
+        elif isinstance(index, numbers.Integral):
+            return self._components[index]
+        else:
+            msg = '{cls.__name__} indices must be integer'
+            raise TypeError(msg.format(cls=cls))
